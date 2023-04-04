@@ -157,7 +157,7 @@
         $(".cardList").append(`
           <div class="container mt-3">
             <div class="card" id="BoardgamesId${objectid}">
-            <h6 class="text-center" data-objectid="${objectid}">${data.yearpublished}(Czech Games Edition)<span class="ml-5"><img src="/game_geeks/images/earshot-games_player.png" width="35px">${data.minplayers}-${data.maxplayers},<img src="/game_geeks/images/earshot-games_time.png"width="35px">${data.minplaytime}-${data.maxplaytime} ,<img src="/game_geeks/images/earshot-games_age.png"  width="35px">${data.age}+</span></h6> 
+            <h6 class="text-center" data-objectid="${objectid}">${data.yearpublished}(Czech Games Edition)<span class="ml-5"><img src="./images/earshot-games_player.png" width="35px">${data.minplayers}-${data.maxplayers},<img src="./images/earshot-games_time.png"width="35px">${data.minplaytime}-${data.maxplaytime} ,<img src="./images/earshot-games_age.png"  width="35px">${data.age}+</span></h6> 
             <h6 class ="text-right ratingstar"></h6>    
             <h2 class="view-details pointer-cursor" data-objectid="${objectid}">${data.boardgameartist}</h2>
             <h5 class="view-details" data-objectid="${objectid}">${data.boardgamesubdomain}</h5>
@@ -268,7 +268,7 @@
                   <h6 class="text-center" data-objectid="${data.objectid}">${data.yearpublished}(Czech Games Edition)</h6>  
                 </div>
                 <div class="col-lg-4">
-                  <span class="ml-5"><img src="/game_geeks/images/earshot-games_player.png" width="35px">${data.minplayers}-${data.maxplayers},<img src="/game_geeks/images/earshot-games_time.png"  width="35px">${data.minplaytime}-${data.maxplaytime},<img src="/game_geeks/images/earshot-games_age.png"  width="35px">${data.age}+</span>
+                  <span class="ml-5"><img src="./images/earshot-games_player.png" width="35px">${data.minplayers}-${data.maxplayers},<img src="./images/earshot-games_time.png"  width="35px">${data.minplaytime}-${data.maxplaytime},<img src="./images/earshot-games_age.png"  width="35px">${data.age}+</span>
                   <h6 class ="text-right ratingstar"></h6>
                 </div>
               </div>
@@ -305,7 +305,7 @@
       /*function ratingStar()
       {
         for(var i = 0; i < 4; i++){
-          $('.ratingstar').append('<img src="/game_geeks/images/earshot-games_star_full.png" width="35px">');
+          $('.ratingstar').append('<img src="./images/earshot-games_star_full.png" width="35px">');
         }
       }*/
   </script>
