@@ -110,15 +110,19 @@
         cache: false,
         dataType: 'JSON',
         success: function (response) {
-          boardgames = response.boardgame;
-          // render pagination
-          renderPaginationHTML();
+          if(response.status == 200){
+            boardgames = response.boardgame;
+            // render pagination
+            renderPaginationHTML();
 
-          let boardgamesChunks = boardgames.slice(0,10);
-          $.each(boardgamesChunks, function (index, data) {
-            renderListViewItem(data);
-          });
-          initiateSlickSlider();
+            let boardgamesChunks = boardgames.slice(0,10);
+            $.each(boardgamesChunks, function (index, data) {
+              renderListViewItem(data);
+            });
+            initiateSlickSlider();
+          }else{
+            alert(response.error);
+          }
           hideloader();
         },
       });

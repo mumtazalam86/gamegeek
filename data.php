@@ -23,6 +23,9 @@
     
 
 
+    if(isset($responsearray['error'])){
+        echo json_encode(['status' => 404, 'error' => $responsearray['error']['message']]); exit;
+    }
 
     $objectsIds = [];
     foreach($responsearray['item'] as $value)
@@ -54,7 +57,8 @@
         // }
         
         // print_r($boardgames);die();
-        echo json_encode($boardgames);
+        $boardgames['status'] = 200;
+        echo json_encode($boardgames); exit;
     endif;
 
 
