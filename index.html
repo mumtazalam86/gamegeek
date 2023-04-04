@@ -258,6 +258,9 @@
 
 
       $(document).on('click', ".show-list-view", function () {
+        if(paged){
+          resetListPageContent(paged);
+        }
         toggleListViewSection();
         toggleDetailsViewSection();
       });
@@ -324,8 +327,9 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div class="boardGameImages">
+            <div class="related-gamaes">
+
+           </div>
           </div>`);
       boardgameMechanicData(boardgameMechanic)
       getBoardGameImagesHTML();    
