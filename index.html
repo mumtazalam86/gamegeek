@@ -111,6 +111,8 @@
           // render pagination
           renderPaginationHTML();
 
+          getBoardGameImagesHTML();
+
           let boardgamesChunks = boardgames.slice(0, 10);
           $.each(boardgamesChunks, function (index, data) {
             renderListViewItem(data);
@@ -143,6 +145,20 @@
       $('.pagination-pages').html(paginationHTML);
       $('.header-row-section').removeClass('d-none');
     }
+
+    function getBoardGameImagesHTML()
+    {
+      // console.log(boardgames);
+      var BoardGameImagesHTML ='';
+      $.each(boardgames, function (index, data) {
+        BoardGameImagesHTML += data.image;
+      });
+
+      $('.boardGameImages').append(`<img src="${BoardGameImagesHTML}" width="50px">`);
+      //  let getBoardGameImages = boardgames;
+      //  console.log(getBoardGameImages);
+    }
+
 
     function renderListViewItem(data) {
       var objectid = data['@attributes']['objectid'];
@@ -177,7 +193,6 @@
         </div>
       </div>`);
     }
-
     function getBoardGameName(data) {
       var objectid = data['@attributes']['objectid'];
       return boardgameBasicData[objectid]['name'];
@@ -275,7 +290,7 @@
       }
 
       var boardGameName = getBoardGameName(data);
-      var boardGameDesigner = getBoardGameDesigner(data);
+      var boardGameDesigner = getBoardGameDesigner(data); 
 
       $('.game-details').html(`
         <div class="container">
@@ -309,11 +324,11 @@
                 </div>
               </div>
             </div>
-            <div class="image_slider">
-
-           </div>
+          </div>
+          <div class="boardGameImages">
           </div>`);
       boardgameMechanicData(boardgameMechanic)
+      getBoardGameImagesHTML();    
     }
 
     function toggleListViewSection() {
