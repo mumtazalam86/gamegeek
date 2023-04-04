@@ -20,44 +20,37 @@
     curl_close($crl);
     
     $responsearray = json_decode(json_encode((array)simplexml_load_string($response)),true);
-    
-
 
     if(isset($responsearray['error'])){
         echo json_encode(['status' => 404, 'error' => $responsearray['error']['message']]); exit;
     }
 
     $objectsIds = [];
+    $boardgameBasicData = [];
     foreach($responsearray['item'] as $value)
     {
         $objectsIds[] = $value['@attributes']['objectid'];
+        $boardgameBasicData[$value['@attributes']['objectid']]['name'] =  $value['name'];
     }
 
     if(!empty($objectsIds)):
-        // $objectChunks = array_chunk($objectsIds, 30);
-        // foreach($objectChunks as $objectArray){
-            // Get Board game data from API endpoint
-            $url = 'https://api.geekdo.com/xmlapi/boardgame/'.implode(',',$objectsIds).'?';
-            $crl = curl_init();
-            curl_setopt($crl, CURLOPT_URL, $url);
-            curl_setopt($crl, CURLOPT_FRESH_CONNECT, true);
-            curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
-            $response = curl_exec($crl);
-            if(!$response){
-                die('Error: "' . curl_error($ch) . '" - Code: ' . curl_errno($ch));
-            }
-            curl_close($crl);
-            // echo $response; die;
+        $url = 'https://api.geekdo.com/xmlapi/boardgame/'.implode(',',$objectsIds).'?';
+        $crl = curl_init();
+        curl_setopt($crl, CURLOPT_URL, $url);
+        curl_setopt($crl, CURLOPT_FRESH_CONNECT, true);
+        curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($crl);
+        if(!$response){
+            die('Error: "' . curl_error($ch) . '" - Code: ' . curl_errno($ch));
+        }
+        curl_close($crl);
 
-            $boardgames = json_decode(json_encode((array)simplexml_load_string($response)),true);
-            $boardgames['username'] = $user_name;
-
-
-        //     break;
-        // }
-        
-        // print_r($boardgames);die();
+        // echo $response; die;
+        $boardgames = json_decode(json_encode((array)simplexml_load_string($response)),true);
+    
         $boardgames['status'] = 200;
+        $boardgames['boardgameBasicData'] = $boardgameBasicData;
+        // pr($boardgames); die;
         echo json_encode($boardgames); exit;
     endif;
 
