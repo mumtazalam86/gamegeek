@@ -214,7 +214,7 @@
           paged = page;
           let nextIndex = (paged*10);
           $(".cardList").html('');
-          $('.image_slider').slick('unslick'); /* ONLY remove the classes and handlers added on initialize */
+          $('.image_slider').slick('unslick'); /* ONLY remove the classes and handlers added on initialize */          
           $('.image_slider').html('');
           for(var loop = 0; loop < 10; loop++){
             if(boardgames[nextIndex]){
@@ -229,6 +229,9 @@
 
 
         $(document).on('click', ".show-list-view", function(){
+          if(paged){
+            resetListPageContent(paged);
+          }
           toggleListViewSection();
           toggleDetailsViewSection();
         });
@@ -292,7 +295,7 @@
                 </div>
               </div>
             </div>
-            <div class="image_slider">
+            <div class="related-gamaes">
 
            </div>
           </div>`);
