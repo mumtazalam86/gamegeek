@@ -13,48 +13,29 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="icon" type="image/x-icon" href="whoo-icon-01.png" />
 </head>
-<style>
-  .image_slider .slider_item {
-    padding: 10px;
-  }
-
-  .image_slider .image-outer {
-    position: relative;
-    padding-bottom: 100%;
-    display: flex !important;
-  }
-
-  .image_slider .image-outer img {
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-</style>
 
 <body style="background-color: transparent;">
   <div class="container mt-2 mb-5">
     <div class="row">
 
       <div class="col-md-12 list-view-section">
-        <div class="row bg-light header-row-section d-none">
-          <div class="col-md-7"></div>
-          <div class="col-md-5">
-            <div class="pagination-bar d-flex">
-              <a href="javascript:;" class="page-pre text-right">Pre &nbsp;</a>
+        <div class="bg-light header-row-section d-none p-2">
+            <div class="pagination-bar d-flex justify-content-end">
+              <a href="javascript:;" class="page-pre text-right text-uppercase">Prev &nbsp;</a>
               <div class="pagination-pages"></div>
-              <a href="javascript:;" class="page-next text-right">&nbsp;Next</a>
-            </div>
-          </div>
+              <a href="javascript:;" class="page-next text-right text-uppercase">&nbsp;Next</a>
+            </div>        
         </div>
-        <div class="image_slider">
-        </div>
-        <div class="col-md-12 cardList"></div>
+        <div class="image_slider"> </div>
+        <div class="cardList"></div>
       </div>
+
+      <div class="col-md-4 offset-md-4 list-slideshow-section d-none">
+        <div class="slideshow-slider"></div>
+      </div>
+
       <div class="col-md-12 detail-view-section d-none">
-        <div class="show-list-view bg-light pointer-cursor p-3 mb-3">Go Back</div>
+        <div class="show-list-view pointer-cursor px-3 py-2 mb-3 btn bg-light text-uppercase text-primary font-DINCondensed">Go Back</div>
         <div class="game-details"></div>
       </div>
       <div class="text-center loader-spinner" style="margin: auto">
@@ -79,35 +60,36 @@
     crossorigin="anonymous"></script>
 
   <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
-  <script src="idle_timer.js" type="text/javascript"></script>
   <script>
 
-         // IDLE TIMEOUT
-          let idleTime;
-          let idleTimeOut = 180 // Idle threshold 3 MINS
-          let idleStatus = false
-          window.addEventListener('load', resetIdleTimer, true);
-          // Event to check for
-          let events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
-          events.forEach(function (name) {
-            document.addEventListener(name, resetIdleTimer, true);
-          });
+    // IDLE TIMEOUT
+    let idleTime;
+    let idleTimeOut = 180 // Idle threshold 3 MINS
+    let idleStatus = false
+    window.addEventListener('load', resetIdleTimer, true);
+    // Event to check for
+    let events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+    events.forEach(function (name) {
+      document.addEventListener(name, resetIdleTimer, true);
+    });
 
-          function idleOut() {
-            idleStatus = true
-            //console.log("Showing Slide")
-            clearTimeout(idleTime);
-            idleTime = setTimeout(idleOut, (idleTimeOut * 1000))
-          }
+    function idleOut() {
+      idleStatus = true
+      // console.log("Showing Slide")
+      viewSlideShowHTML();
+      clearTimeout(idleTime);
+      idleTime = setTimeout(idleOut, (idleTimeOut * 1000))
+    }
 
-          function resetIdleTimer() {
-            if(idleStatus == true || idleStatus == undefined) {
-              idleStatus = false
-              //console.log("Showing Normal View")
-            }
-            clearTimeout(idleTime);
-            idleTime = setTimeout(idleOut, (idleTimeOut * 1000))
-          }
+    function resetIdleTimer() {
+      if (idleStatus == true || idleStatus == undefined) {
+        idleStatus = false
+        //console.log("Showing Normal View")
+        toggleSlideShowView();
+      }
+      clearTimeout(idleTime);
+      idleTime = setTimeout(idleOut, (idleTimeOut * 1000))
+    }
 
     function getUrlVars() {
       var vars = [], hash;
@@ -135,6 +117,7 @@
       success: function (response) {
         if (response.status == 200) {
           boardgames = response.boardgame;
+          console.log(boardgames);
           boardgameBasicData = response.boardgameBasicData;
           // render pagination
           renderPaginationHTML();
@@ -167,40 +150,64 @@
       var paginationHTML = '';
       var startIndex = 0;
       var endIndex = 5;
-      var currentPageNumber = (paged+1);
+      var currentPageNumber = (paged + 1);
       // console.log("currentPageNumber ", currentPageNumber);
-      if(currentPageNumber > 2){
-        startIndex = (currentPageNumber-3);
-        endIndex = (currentPageNumber+2);
+      if (currentPageNumber > 2) {
+        startIndex = (currentPageNumber - 3);
+        endIndex = (currentPageNumber + 2);
       }
       // console.log("startIndex ", startIndex);
       // console.log("endIndex ", endIndex);
       for (loop = startIndex; loop < endIndex; loop++) {
         let active = (loop == paged) ? 'active' : '';
-        if(paginationHTML == ""){ paginationHTML = ' | '; }
-        paginationHTML += "<a href='javascript:;' class='page-number "+active+"' data-paged='" + loop + "'> " + (loop + 1) + " </a> | ";
+        if (paginationHTML == "") { paginationHTML = ' | '; }
+        paginationHTML += "<a href='javascript:;' class='page-number " + active + "' data-paged='" + loop + "'> " + (loop + 1) + " </a> | ";
       }
 
       $('.pagination-pages').html(paginationHTML);
       $('.header-row-section').removeClass('d-none');
     }
 
-    function getBoardGameImagesHTML()
-    {
-      $('.related-gamaes').html();
+    function getBoardGameImagesHTML() {
+      $('.related_games').html();
       var suggestedGamesHTML = '';
-      var startIndex = Math.floor(Math.random()*boardgames.length);
+      var startIndex = Math.floor(Math.random() * boardgames.length);
       console.log(startIndex, boardgames);
       for (var loop = 0; loop < 5; loop++) {
-          if (boardgames[startIndex]) {
-            data = boardgames[startIndex];
-            // suggestedGamesHTML += "<div class='row'><div class='col-md-12'><img class='img-responsive' src='"+data.image+"'></div><div class='col-md-12'>"+getBoardGameName(data)+"</div></div>";
-            suggestedGamesHTML += `<div class="slider_item"><div class="image-outer"><a href="javascript:;"><img src="${data.image}" class="img-fluid" id="sliderImg"></a></div><h6>${getBoardGameName(data)}</h6></div>`;
-            startIndex += 1;
-          }
+        if (boardgames[startIndex]) {
+          data = boardgames[startIndex];
+          // suggestedGamesHTML += "<div class='row'><div class='col-md-12'><img class='img-responsive' src='"+data.image+"'></div><div class='col-md-12'>"+getBoardGameName(data)+"</div></div>";
+          suggestedGamesHTML += `<div class="slider_item"><div class="image-outer"><a href="javascript:;"><img src="${data.image}" class="img-fluid" id="sliderImg"></a></div><h6 class="text-uppercase font-DINCondensed">${getBoardGameName(data)}</h6></div>`;
+          startIndex += 1;
+        }
       }
-      $('.related-gamaes').html(suggestedGamesHTML);
+      $('.related_games').html(suggestedGamesHTML);
       initiateRelatedGamesSlider();
+    }
+
+    function viewSlideShowHTML()
+    {
+      if($('.slideshow-slider').html() != ''){
+        $('.slideshow-slider').slick('unslick').html('');
+      }
+      $.each(boardgames, function(index, data){
+        var objectid = data['@attributes']['objectid'];
+        var description = data.description;
+          if (description.length > 160) {
+            textContent = description.substr(0,150) + '...';
+          }
+        $('.slideshow-slider').append(`<div class="slider_item"><div class="image-outer"><a href="javascript:;" class="games-slider-item" data-objectid="${objectid}"><img src="${data.image}" class="img-fluid" id="sliderImg" data-BoardgamesId="${objectid}"></a></div><h4>${getBoardGameName(data)}</h4><h6>${getBoardGameDesigner(data)}</h6><p>${textContent}</p></div>`);
+      });
+
+      initiateSlideShowSlider();
+      // $(".list-slideshow-section").removeClass("d-none");
+      // $(".list-view-section").addClass("d-none");
+      toggleSlideShowView();
+    }
+
+    function toggleSlideShowView(){
+      $(".list-slideshow-section").toggleClass("d-none");
+      $(".list-view-section").toggleClass("d-none");
     }
 
 
@@ -216,30 +223,60 @@
 
       var boardGameDesigner = getBoardGameDesigner(data);
       var boardGameName = getBoardGameName(data);
+      var gameRatingAverage = getBoardGameRatingAverage(data);
+      var ratingInPercentage = ((gameRatingAverage*100)/5);
+       console.log("ratingInPercentage ", ratingInPercentage);
       $(".cardList").append(`
-          <div class="container mt-3">
-            <div class="card" id="list-game-${objectid}">
-            <h6 class="text-center" data-objectid="${objectid}">${data.yearpublished}(Czech Games Edition)<span class="ml-5"><img src="./images/earshot-games_player.png" width="35px">${data.minplayers}-${data.maxplayers},<img src="./images/earshot-games_time.png"width="35px">${data.minplaytime}-${data.maxplaytime} ,<img src="./images/earshot-games_age.png"  width="35px">${data.age}+</span></h6> 
-            <h6 class ="text-right ratingstar"></h6>    
-            <h2 class="view-details pointer-cursor" data-objectid="${objectid}">${boardGameName}</h2>
-            <h5>${boardGameDesigner}</h5>
+          <div class="mt-3 mt-md-5">
+            <div class="card border-0 bg-light" id="list-game-${objectid}">
+              <div class="card-header border-0 bg-transparent">
+                <div class="row">
+                  <div class="col-md-7">
+                    <h2 class="view-details pointer-cursor display-5 font-DINCondensed text-primary" data-objectid="${objectid}">${boardGameName} <sup class="text-dark font-DINCondensed sup-small">${data.yearpublished}(${getBoardGamePublisher(data)})</sup></h2>
+                    <h5 class="font-DINCondensed mb-0">${boardGameDesigner}</h5>
+                    <h5 class="font-DINCondensed mb-0">${gameRatingAverage}</h5>
+                  </div>
+                  <div class="col-md-5">
+                    <div class="text-right" data-objectid="${objectid}"><span class=""><img src="./images/earshot-games_player.png" width="35px">${data.minplayers}-${data.maxplayers},<img src="./images/earshot-games_time.png"width="35px">${data.minplaytime}-${data.maxplaytime} ,<img src="./images/earshot-games_age.png"  width="35px">${data.age}+</span></div>
+                    <div class ="text-right ratingStar">
+                      <div class="rating_fill" style="width:${ratingInPercentage}%;"></div>
+                      <img src="images/earshot-games_star_empty.png" alt=""/>
+                      <img src="images/earshot-games_star_empty.png" alt=""/>
+                      <img src="images/earshot-games_star_empty.png" alt=""/>
+                      <img src="images/earshot-games_star_empty.png" alt=""/>
+                      <img src="images/earshot-games_star_empty.png" alt=""/>
+                    </div>   
+                  </div>
+                </div>                
+            </div>
+            <div class="card-body">
             <div class="row">
               <div class="col-lg-3">
                 <img src="${data.image}" class="img-fluid view-details pointer-cursor" data-objectid="${objectid}" >
-                <div class="view-details" data-objectid="${objectid}"><h5 class="pointer-cursor text-danger">More</h5></div>
               </div>
                <div class="col-lg-9">  
-                <div class="card-body">${textContent}</div>
+                <div class="card-body font-DINCondensed text-large">${textContent}</div>
                </div>
+                <div class="col-12">                
+                  <div class="view-details" data-objectid="${objectid}"><h5 class="pointer-cursor text-danger m-0 font-DINCondensed text-uppercase">More</h5></div>
+                </div>
               </div>
+            </div>
             </div>
           </div>
         </div>
       </div>`);
     }
+
+
     function getBoardGameName(data) {
       var objectid = data['@attributes']['objectid'];
       return boardgameBasicData[objectid]['name'];
+    }
+    
+    function getBoardGameRatingAverage(data) {
+      var objectid = data['@attributes']['objectid'];
+      return boardgameBasicData[objectid]['rating'];
     }
 
     function getBoardGameDesigner(data) {
@@ -253,12 +290,20 @@
         return data.boardgamedesigner;
       }
     }
+    
+    function getBoardGamePublisher(data) {
+      if ($.isArray(data.boardgamepublisher)) {
+        return data.boardgamepublisher[0];
+      } else {
+        return data.boardgamepublisher;
+      }
+    }
 
 
     function addSliderSlide(data) {
       var boardGameName = getBoardGameName(data);
       var objectid = data['@attributes']['objectid'];
-      $('.image_slider').append(`<div class="slider_item"><div class="image-outer"><a href="javascript:;" class="games-slider-item" data-objectid="${objectid}"><img src="${data.image}" class="img-fluid" id="sliderImg" data-BoardgamesId="${objectid}"></a></div><h6>${boardGameName}</h6></div>`);
+      $('.image_slider').append(`<div class="slider_item"><div class="image-outer"><a href="javascript:;" class="games-slider-item" data-objectid="${objectid}"><img src="${data.image}" class="img-fluid" id="sliderImg" data-BoardgamesId="${objectid}"></a></div><h6 class="text-uppercase font-DINCondensed text-truncate m-0 p-2 overflow-hidden text-nowrap">${boardGameName}</h6></div>`);
     }
 
     function initiateSlickSlider() {
@@ -266,19 +311,85 @@
         infinite: true,
         slidesToShow: 5,
         slidesToScroll: 3,
-        dots: true,
+        dots: false,
+        arrows: true,
         infinite: 0,
         autoplay: true,
         autoplaySpeed: 1000,
+        responsive: [
+          {
+            breakpoint: 1024,
+            settings: {
+              slidesToShow: 3,
+              slidesToScroll: 3,
+              infinite: true,
+              dots: true
+            }
+          },
+          {
+            breakpoint: 600,
+            settings: {
+              slidesToShow: 2,
+              slidesToScroll: 2
+            }
+          },
+          {
+            breakpoint: 480,
+            settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1
+            }
+          }
+          // You can unslick at a given breakpoint now by adding:
+          // settings: "unslick"
+          // instead of a settings object
+        ]
       });
     }
     
+    function initiateSlideShowSlider() {
+      $('.slideshow-slider').slick({
+        infinite: true,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        dots: false,
+        infinite: 0,
+        autoplay: true,
+        autoplaySpeed: 2000,
+      });
+    }
+
     function initiateRelatedGamesSlider() {
-      if($('.related-gamaes').find('div').length){
-        $('.related-gamaes').slick({
+      if ($('.related_games').find('div').length) {
+        $('.related_games').slick({
           infinite: true,
-          slidesToShow: 3,
-          slidesToScroll: 2
+          slidesToShow: 5,
+          slidesToScroll: 2,
+          responsive: [
+          {
+            breakpoint: 1024,
+            settings: {
+              slidesToShow: 3,
+              slidesToScroll: 1,
+              infinite: true,
+              dots: true
+            }
+          },
+          {
+            breakpoint: 600,
+            settings: {
+              slidesToShow: 2,
+              slidesToScroll: 1
+            }
+          },
+          {
+            breakpoint: 480,
+            settings: {
+              slidesToShow: 1,
+              slidesToScroll: 1
+            }
+          }
+        ]
         });
       }
     }
@@ -287,11 +398,14 @@
 
       $(document).on('click', ".games-slider-item", function () {
         var objectId = $(this).data("objectid");
-        scrollPage("#list-game-"+objectId);
+        scrollPage("#list-game-" + objectId);
       });
 
       $(document).on('click', ".page-number", function () {
-        resetListPageContent($(this).data('paged'));
+        if($(this).hasClass('active') === false){
+          console.log("no Active Class!")
+          resetListPageContent($(this).data('paged'));
+        }
       });
 
       $(document).on('click', ".page-pre", function () {
@@ -322,7 +436,7 @@
 
 
       $(document).on('click', ".show-list-view", function () {
-        if(paged){
+        if (paged) {
           resetListPageContent(paged);
         }
         toggleListViewSection();
@@ -341,16 +455,16 @@
       });
     });
 
-    function scrollPage(element){
+    function scrollPage(element) {
       $('html, body').animate({
-          scrollTop: $(element).offset().top
+        scrollTop: $(element).offset().top
       });
     }
 
     function renderDetailsViewHTML(data) {
       toggleListViewSection();
       toggleDetailsViewSection();
-      
+
       var boardgameMechanic = "";
       function boardgameMechanicData(boardgameMechanic) {
         $.each(data.boardgamemechanic, function (gameMechanic, index) {
@@ -361,51 +475,52 @@
       }
 
       var boardGameName = getBoardGameName(data);
-      var boardGameDesigner = getBoardGameDesigner(data); 
-      
+      var boardGameDesigner = getBoardGameDesigner(data);
 
-      $('.game-details').html(`
-        <div class="container">
-            <div class="card">
-               <div class="row">
-                <div class="col-lg-4">
-                  <h3>${boardGameName}</h3>
-                  <h5>${boardGameDesigner}</h5>
-                </div>
-                <div class="col-lg-4">
-                  <h6 class="text-center" data-objectid="${data.objectid}">${data.yearpublished}(Czech Games Edition)</h6>  
-                </div>
-                <div class="col-lg-4">
-                  <span class="ml-5"><img src="./images/earshot-games_player.png" width="35px">${data.minplayers}-${data.maxplayers},<img src="./images/earshot-games_time.png"  width="35px">${data.minplaytime}-${data.maxplaytime},<img src="./images/earshot-games_age.png"  width="35px">${data.age}+</span>
-                  <h6 class ="text-right ratingstar"></h6>
+
+      $('.game-details').html(`       
+            <div class="bg-light border-0 card">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-9">
+                    <h3 class="font-DINCondensed">${boardGameName} <sup class="sup-small" data-objectid="${data.objectid}">${data.yearpublished}(Czech Games Edition)</sup></h3>
+                    <h5 class="font-DINCondensed">${boardGameDesigner}</h5>
+
+                    <div class="row">
+                      <div class="col-md-4">
+                        <img src="${data.image}" class="img-fluid">
+                      </div>
+                      <div class="col-md-8">
+                        <div class="font-DINCondensed text-large">${data.description}</div>
+                        <div class="gamePrivateDataHTML"></div>
+                      </div>                    
+                    </div>
+
+                  </div>
+                  <div class="col-md-3 text-right">
+                    <div class=""><img src="./images/earshot-games_player.png" width="35px">${data.minplayers}-${data.maxplayers},<img src="./images/earshot-games_time.png"  width="35px">${data.minplaytime}-${data.maxplaytime},<img src="./images/earshot-games_age.png"  width="35px">${data.age}+</div>
+                    <h6 class ="text-right ratingstar"></h6>
+                    <div class="btn-primary text-center">MEDIUM</div>
+                    <div class="card text-center">
+                      <div class="card-header">MECHANICS</div>
+                      <div class="card-body"><p class="boardgamemechanic"> </p></div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div class="row">
-                <div class="col-lg-4">
-                  <img src="${data.image}" class="img-fluid">
-                </div>
-                <div class="col-lg-4">
-                  <div class="card-body">${data.description}</div>
-                  <div class="card-body gamePrivateDataHTML"></div>
-                </div>
-                <div class="col-lg-4">
-                  <div class="btn-primary text-center">MEDIUM</div>
-                  <div class="card">
-                    <div class="card-header">MECHANICS</div>
-                    <p class="boardgamemechanic"> </p>
-                   </div>
-                </div>
-              </div>
+          
+             
             </div>
-            <div class="related-gamaes">
+            <div class="related_games">
             <h5>You might also like</h5>  
-           </div>
-          </div>`);
-      
+           `);
+
       renderGamePrivateData(data);
       boardgameMechanicData(boardgameMechanic);
-      getBoardGameImagesHTML();    
+      getBoardGameImagesHTML();
     }
+
+
 
     function toggleListViewSection() {
       $('.list-view-section').toggleClass('d-none');
@@ -413,27 +528,27 @@
     function toggleDetailsViewSection() {
       $('.detail-view-section').toggleClass('d-none');
     }
-        
-      function renderGamePrivateData(data){
-        var objectid = data['@attributes']['objectid'];
-        var gamePrivatedataHTML = '';
-        $.getJSON("/game_geeks/games.json", function(data){
-          $.each(data, function (index, row) {
-            if(row["Game ID"] == objectid){
-              $.each(row, function (key, value) {
-                if(key != "Game ID" && key != "Game Name"){
-                  gamePrivatedataHTML += "<div class=''><strong>"+key+": </strong> <span class=''>"+value+"</span></div>";
-                }
-              });
-              return;
-            }
-          });
-          console.log("gamePrivatedataHTML ", gamePrivatedataHTML);
-          $(document).find('.gamePrivateDataHTML').html(gamePrivatedataHTML);
-        }).fail(function(){
-            console.log("An error has occurred.");
-        });        
-      }
+
+    function renderGamePrivateData(data) {
+      var objectid = data['@attributes']['objectid'];
+      var gamePrivatedataHTML = '';
+      $.getJSON("/game_geeks/games.json", function (data) {
+        $.each(data, function (index, row) {
+          if (row["Game ID"] == objectid) {
+            $.each(row, function (key, value) {
+              if (key != "Game ID" && key != "Game Name") {
+                gamePrivatedataHTML += "<div class=''><strong>" + key + ": </strong> <span class=''>" + value + "</span></div>";
+              }
+            });
+            return;
+          }
+        });
+        console.log("gamePrivatedataHTML ", gamePrivatedataHTML);
+        $(document).find('.gamePrivateDataHTML').html(gamePrivatedataHTML);
+      }).fail(function () {
+        console.log("An error has occurred.");
+      });
+    }
 
       // $(document).on('click', "#sliderImg", function () {
 

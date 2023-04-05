@@ -25,12 +25,17 @@
         echo json_encode(['status' => 404, 'error' => $responsearray['error']['message']]); exit;
     }
 
+    // pr($responsearray); die;
     $objectsIds = [];
     $boardgameBasicData = [];
     foreach($responsearray['item'] as $value)
     {
         $objectsIds[] = $value['@attributes']['objectid'];
         $boardgameBasicData[$value['@attributes']['objectid']]['name'] =  $value['name'];
+        $boardgameBasicData[$value['@attributes']['objectid']]['rating'] = '';
+        if(isset($value['stats']['rating'])){
+            $boardgameBasicData[$value['@attributes']['objectid']]['rating'] =  ($value['stats']['rating']['average']['@attributes']['value']/2);
+        }
     }
 
     if(!empty($objectsIds)):
