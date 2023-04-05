@@ -162,12 +162,23 @@
     }
 
     function renderPaginationHTML() {
-      let numberofLinks = (boardgames.length / 10);
-      // let leftLinks = (boardgames.length % 10);
-      // if(leftLinks > 0){ numberofLinks += 1; }
+      let per_page_items = 10;
+      let numberofLinks = (boardgames.length / per_page_items);
       var paginationHTML = '';
-      for (loop = 0; loop < numberofLinks; loop++) {
-        paginationHTML += "<a href='javascript:;' class='page-number' data-paged='" + loop + "'> " + (loop + 1) + " </a> | ";
+      var startIndex = 0;
+      var endIndex = 5;
+      var currentPageNumber = (paged+1);
+      console.log("currentPageNumber ", currentPageNumber);
+      if(currentPageNumber > 2){
+        startIndex = (currentPageNumber-3);
+        endIndex = (currentPageNumber+2);
+      }
+      console.log("startIndex ", startIndex);
+      console.log("endIndex ", endIndex);
+      for (loop = startIndex; loop < endIndex; loop++) {
+        let active = (loop == paged) ? 'active' : '';
+        if(paginationHTML == ""){ paginationHTML = ' | '; }
+        paginationHTML += "<a href='javascript:;' class='page-number "+active+"' data-paged='" + loop + "'> " + (loop + 1) + " </a> | ";
       }
 
       $('.pagination-pages').html(paginationHTML);
@@ -297,6 +308,7 @@
           }
         }
         initiateSlickSlider();
+        renderPaginationHTML();
       }
 
 
