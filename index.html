@@ -168,13 +168,13 @@
       var startIndex = 0;
       var endIndex = 5;
       var currentPageNumber = (paged+1);
-      console.log("currentPageNumber ", currentPageNumber);
+      // console.log("currentPageNumber ", currentPageNumber);
       if(currentPageNumber > 2){
         startIndex = (currentPageNumber-3);
         endIndex = (currentPageNumber+2);
       }
-      console.log("startIndex ", startIndex);
-      console.log("endIndex ", endIndex);
+      // console.log("startIndex ", startIndex);
+      // console.log("endIndex ", endIndex);
       for (loop = startIndex; loop < endIndex; loop++) {
         let active = (loop == paged) ? 'active' : '';
         if(paginationHTML == ""){ paginationHTML = ' | '; }
@@ -218,11 +218,11 @@
       var boardGameName = getBoardGameName(data);
       $(".cardList").append(`
           <div class="container mt-3">
-            <div class="card" id="BoardgamesId${objectid}">
+            <div class="card" id="list-game-${objectid}">
             <h6 class="text-center" data-objectid="${objectid}">${data.yearpublished}(Czech Games Edition)<span class="ml-5"><img src="./images/earshot-games_player.png" width="35px">${data.minplayers}-${data.maxplayers},<img src="./images/earshot-games_time.png"width="35px">${data.minplaytime}-${data.maxplaytime} ,<img src="./images/earshot-games_age.png"  width="35px">${data.age}+</span></h6> 
             <h6 class ="text-right ratingstar"></h6>    
             <h2 class="view-details pointer-cursor" data-objectid="${objectid}">${boardGameName}</h2>
-            <h5 class="view-details" data-objectid="${objectid}">${boardGameDesigner}</h5>
+            <h5>${boardGameDesigner}</h5>
             <div class="row">
               <div class="col-lg-3">
                 <img src="${data.image}" class="img-fluid view-details pointer-cursor" data-objectid="${objectid}" >
@@ -258,14 +258,18 @@
     function addSliderSlide(data) {
       var boardGameName = getBoardGameName(data);
       var objectid = data['@attributes']['objectid'];
-      $('.image_slider').append(`<div class="slider_item"><div class="image-outer"><a href="#BoardgamesId${objectid}"><img src="${data.image}" class="img-fluid" id="sliderImg" data-BoardgamesId="${objectid}"></a></div><h6>${boardGameName}</h6></div>`);
+      $('.image_slider').append(`<div class="slider_item"><div class="image-outer"><a href="javascript:;" class="games-slider-item" data-objectid="${objectid}"><img src="${data.image}" class="img-fluid" id="sliderImg" data-BoardgamesId="${objectid}"></a></div><h6>${boardGameName}</h6></div>`);
     }
 
     function initiateSlickSlider() {
       $('.image_slider').slick({
         infinite: true,
         slidesToShow: 5,
-        slidesToScroll: 3
+        slidesToScroll: 3,
+        dots: true,
+        infinite: 0,
+        autoplay: true,
+        autoplaySpeed: 1000,
       });
     }
     
@@ -280,6 +284,11 @@
     }
 
     jQuery(document).ready(function ($) {
+
+      $(document).on('click', ".games-slider-item", function () {
+        var objectId = $(this).data("objectid");
+        scrollPage("#list-game-"+objectId);
+      });
 
       $(document).on('click', ".page-number", function () {
         resetListPageContent($(this).data('paged'));
@@ -332,6 +341,12 @@
       });
     });
 
+    function scrollPage(element){
+      $('html, body').animate({
+          scrollTop: $(element).offset().top
+      });
+    }
+
     function renderDetailsViewHTML(data) {
       toggleListViewSection();
       toggleDetailsViewSection();
@@ -342,6 +357,7 @@
           boardgameMechanic += '<p class="ml-3">' + index + '</p>';
         });
         $('.boardgamemechanic').append(boardgameMechanic);
+        scrollPage(".detail-view-section");
       }
 
       var boardGameName = getBoardGameName(data);
