@@ -117,7 +117,7 @@
       success: function (response) {
         if (response.status == 200) {
           boardgames = response.boardgame;
-          console.log(boardgames);
+          // console.log(boardgames);
           boardgameBasicData = response.boardgameBasicData;
           // render pagination
           renderPaginationHTML();
@@ -172,7 +172,7 @@
       $('.related_games').html();
       var suggestedGamesHTML = '';
       var startIndex = Math.floor(Math.random() * boardgames.length);
-      console.log(startIndex, boardgames);
+      // console.log(startIndex, boardgames);
       for (var loop = 0; loop < 5; loop++) {
         if (boardgames[startIndex]) {
           data = boardgames[startIndex];
@@ -206,8 +206,18 @@
     }
 
     function toggleSlideShowView(){
-      $(".list-slideshow-section").toggleClass("d-none");
-      $(".list-view-section").toggleClass("d-none");
+      if($(".list-slideshow-section").hasClass("d-none")){
+        $(".list-slideshow-section").removeClass("d-none");
+        $(".list-view-section").addClass("d-none");
+        $(".detail-view-section").addClass("d-none");
+      }else{
+        $(".list-slideshow-section").addClass("d-none");
+        $(".detail-view-section").addClass("d-none");
+        if (paged) {
+          resetListPageContent(paged);
+        }
+        $(".list-view-section").removeClass("d-none");
+      }
     }
 
 
@@ -225,7 +235,7 @@
       var boardGameName = getBoardGameName(data);
       var gameRatingAverage = getBoardGameRatingAverage(data);
       var ratingInPercentage = ((gameRatingAverage*100)/5);
-       console.log("ratingInPercentage ", ratingInPercentage);
+      //  console.log("ratingInPercentage ", ratingInPercentage);
       $(".cardList").append(`
           <div class="mt-3 mt-md-5">
             <div class="card border-0 bg-light" id="list-game-${objectid}">
@@ -395,7 +405,7 @@
 
       $(document).on('click', ".page-number", function () {
         if($(this).hasClass('active') === false){
-          console.log("no Active Class!")
+          // console.log("no Active Class!")
           resetListPageContent($(this).data('paged'));
         }
       });
@@ -535,10 +545,10 @@
             return;
           }
         });
-        console.log("gamePrivatedataHTML ", gamePrivatedataHTML);
+        // console.log("gamePrivatedataHTML ", gamePrivatedataHTML);
         $(document).find('.gamePrivateDataHTML').html(gamePrivatedataHTML);
       }).fail(function () {
-        console.log("An error has occurred.");
+        // console.log("An error has occurred.");
       });
     }
 
