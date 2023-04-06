@@ -64,7 +64,7 @@
 
     // IDLE TIMEOUT
     let idleTime;
-    let idleTimeOut = 180 // Idle threshold 3 MINS
+    let idleTimeOut = 60 // Idle threshold 3 MINS
     let idleStatus = false
     window.addEventListener('load', resetIdleTimer, true);
     // Event to check for
@@ -524,7 +524,7 @@
     function renderGamePrivateData(data) {
       var objectid = data['@attributes']['objectid'];
       var gamePrivatedataHTML = '';
-      $.getJSON("/game_geeks/games.json", function (data) {
+      $.getJSON("./games.json", function (data) {
         $.each(data, function (index, row) {
           if (row["Game ID"] == objectid) {
             $.each(row, function (key, value) {
