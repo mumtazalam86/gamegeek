@@ -66,6 +66,25 @@
     let idleTime;
     let idleTimeOut = 60 // Idle threshold 3 MINS
     let idleStatus = false
+
+
+    /*var idleState = false;
+		var idleTimer = null;
+    $('*').bind('mousemove click mouseup mousedown keydown keypress keyup submit change mouseenter scroll resize dblclick', function () {
+        clearTimeout(idleTimer);
+        if (idleState == true) { 
+          console.log("Active");
+          toggleSlideShowView();
+        }
+        idleState = false;
+        idleTimer = setTimeout(function () { 
+          console.log("In-Active");
+          viewSlideShowHTML();
+          idleState = true; 
+        }, idleTimeOut * 1000);
+    });*/
+
+    
     window.addEventListener('load', resetIdleTimer, true);
     // Event to check for
     let events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
