@@ -522,7 +522,7 @@ and (orientation : portrait) {
 .gamePrivateDataHTML > div{ 
     padding-bottom:10px; margin-bottom: 10px; border-bottom: 1px solid #fff;
 }
-.gamePrivateDataHTML > div:nth-last-child(){
+.gamePrivateDataHTML div:nth-last-child(1){
     margin-bottom: 0; padding-bottom: 0; border:none;
 }
 .view-details h5{ padding-top:10px;}
@@ -568,3 +568,4 @@ and (orientation : portrait) {
 .page_greek.AnimateView .slideshow-slider  p{
     font-family: 'DINRegular';
 }
+.preview_title{ white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 18px; margin-bottom: 2vh; border-left: 15px solid #ff0000;}

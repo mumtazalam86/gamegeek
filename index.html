@@ -62,23 +62,29 @@
   <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
   <script>
 
+
+    // Global Variables
+    var boardgames;
+    var boardgameBasicData;
+    var paged = 0;  
+    
     // IDLE TIMEOUT
-    let idleTime;
-    let idleTimeOut = 10 // Idle threshold 3 MINS
-    let idleStatus = false
-
-
+    let idleTimeOut = 10 // Idle threshold 1 MINS
     var idleState = false;
 		var idleTimer = null;
     $('*').bind('mousemove click mouseup mousedown keydown keypress keyup submit change mouseenter scroll resize dblclick', function () {
+
         clearTimeout(idleTimer);
         if (idleState == true) { 
           // console.log("Active");
-          // toggleSlideShowView();
+          toggleSlideShowView();
         }
         idleState = false;
         idleTimer = setTimeout(function () { 
-          console.log("In-Active");
+          // console.log("In-Active");
+          if(typeof boardgames == 'undefined' || boardgames == ''){
+            return false;
+          }
           viewSlideShowHTML();
           idleState = true; 
         }, idleTimeOut * 1000);
@@ -95,40 +101,44 @@
       return vars;
     }
 
-    var boardgames;
-    var boardgameBasicData;
-    var paged = 0;
+      
 
-    var username = (getUrlVars()["username"]) ? getUrlVars()["username"] : 'Thitsa';
-    $.ajax({
-      //url: apiurl, 
-      url: 'data.php',
-      type: 'POST',
-      data: 'username=' + username,
-      cache: false,
-      dataType: 'JSON',
-      success: function (response) {
-        if (response.status == 200) {
-          boardgames = response.boardgame;
-          // console.log(boardgames);
-          boardgameBasicData = response.boardgameBasicData;
-          // render pagination
-          renderPaginationHTML();
+    var username = (getUrlVars()["username"]) ? getUrlVars()["username"] : '';
+    if(username == ''){
+      $(".cardList").html('<div class="text-center mt-5 pt-5"><h3>USERNAME IS MISSING</h3><p>Use correct user to find its game collection.</p></div>');
+      hideloader();
+    }else{
+      $.ajax({
+        //url: apiurl, 
+        url: 'data.php',
+        type: 'POST',
+        data: 'username=' + username,
+        cache: false,
+        dataType: 'JSON',
+        success: function (response) {
+          if (response.status == 200) {
+            boardgames = response.boardgame;
+            // console.log(boardgames);
+            boardgameBasicData = response.boardgameBasicData;
+            // render pagination
+            renderPaginationHTML();
 
-          // getBoardGameImagesHTML();
+            // getBoardGameImagesHTML();
 
-          let boardgamesChunks = boardgames.slice(0, 10);
-          $.each(boardgamesChunks, function (index, data) {
-            renderListViewItem(data);
-          });
-          initiateSlickSlider();
-        } else {
-          alert(response.error);
-        }
-        hideloader();
-      },
-    });
-
+            let boardgamesChunks = boardgames.slice(0, 10);
+            $.each(boardgamesChunks, function (index, data) {
+              renderListViewItem(data);
+            });
+            initiateSlickSlider();
+          } else {
+            // alert(response.error);
+            // $(".cardList").html('<div class="alert alert-danger">'+response.error+'</div>');
+            $(".cardList").html('<div class="text-center mt-5 pt-5"><h3>NO COLLECTION FOR THIS USER</h3><p>Use correct user to find its game collection.</p></div>');
+          }
+          hideloader();
+        },
+      });
+    }
     function hideloader() {
       $('.loader-spinner').addClass('d-none');
     }
@@ -186,29 +196,44 @@
       $.each(boardgames, function(index, data){
         var objectid = data['@attributes']['objectid'];
         var description = data.description;
-          if (description.length > 160) {
-            textContent = description.substr(0,150) + '...';
-          }
-        $('.slideshow-slider').append(`<div class="slider_item">${data.boardgameartist}<div class="image-outer"><a href="javascript:;" class="games-slider-item" data-objectid="${objectid}"><img src="${data.image}" class="img-fluid" id="sliderImg" data-BoardgamesId="${objectid}"></a></div><h4>${getBoardGameName(data)}</h4><h6>${getBoardGameDesigner(data)}</h6><p>${textContent}</p></div>`);
+        if (description.length > 160) {
+          textContent = description.substr(0,150) + '...';
+        }
+
+        var gameRatingAverage = getBoardGameRatingAverage(data);
+        var ratingInPercentage = ((gameRatingAverage*100)/5);
+
+        $('.slideshow-slider').append(`<div class="slider_item"><div class="bg-alto py-1 px-2  preview_title">${getBoardGameName(data)}</div><div class="image-outer"><a href="javascript:;" class="games-slider-item" data-objectid="${objectid}"><img src="${data.image}" class="img-fluid" id="sliderImg" data-BoardgamesId="${objectid}"></a></div><h4>${getBoardGameName(data)}</h4><h6>${getBoardGameDesigner(data)}</h6>
+        <div class="ratingWrapper"><div class="ratingStar" style="width: ${ratingInPercentage}%"><span>&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</span></div> </div>
+        <div class="text-right" data-objectid="${objectid}"><div class="metaGroup"><span><img src="./images/earshot-games_player.png" width="35px">${data.minplayers}-${data.maxplayers}</span><span><img src="./images/earshot-games_time.png"width="35px">${data.minplaytime}-${data.maxplaytime}</span><span><img src="./images/earshot-games_age.png"  width="35px">${data.age}+</span></div></div> 
+        <div class="gamePrivateDataHTML slideshow-game-${objectid}-private-data"></div>
+        <p>${textContent}</p></div>`);
+
+        renderGamePrivateData(data, `.slideshow-game-${objectid}-private-data`);
+
       });
 
       initiateSlideShowSlider();
-      $(".list-slideshow-section").removeClass("d-none");
-      $(".list-view-section").addClass("d-none");
-      // toggleSlideShowView();
+      
+      // Manual SlideShow View
+      // $("body").addClass("AnimateView");
+      // $(".list-slideshow-section").removeClass("d-none");
+      // $(".list-view-section").addClass("d-none");
+      // $(".detail-view-section").addClass("d-none");
+
+      // Automatic Slideshow View
+      toggleSlideShowView();
     }
 
     function toggleSlideShowView(){
       if($(".list-slideshow-section").hasClass("d-none")){
         $("body").addClass("AnimateView");
         $(".list-slideshow-section").removeClass("d-none");
-        $("body").removeClass('AnimateView');
         $(".list-view-section").addClass("d-none");
         $(".detail-view-section").addClass("d-none");
       }else{
         $(".list-slideshow-section").addClass("d-none");
         $(".detail-view-section").addClass("d-none");
-        $("body").removeClass('AnimateView');
         if (paged) {
           resetListPageContent(paged);
         }
@@ -470,6 +495,8 @@
       toggleListViewSection();
       toggleDetailsViewSection();
 
+      var objectid = data['@attributes']['objectid'];
+
       var boardgameMechanic = "";
       function boardgameMechanicData(boardgameMechanic) {
         $.each(data.boardgamemechanic, function (gameMechanic, index) {
@@ -495,7 +522,7 @@
                     <div class="row mt-md-5 mt-3">
                       <div class="col-md-4">
                         <div class="img-box"><img src="${data.image}" class="img-fluid"></div>
-                        <div class="gamePrivateDataHTML"></div>
+                        <div class="gamePrivateDataHTML details-game-${objectid}-private-data"></div>
                       </div>
                       <div class="col-md-8">
                         <div class="font-DINCondensed text-large">${data.description}</div>                        
@@ -524,7 +551,7 @@
             <h5>You might also like</h5>  
            `);
 
-      renderGamePrivateData(data);
+      renderGamePrivateData(data, `.details-game-${objectid}-private-data`);
       boardgameMechanicData(boardgameMechanic);
       getBoardGameImagesHTML();
     }
@@ -538,9 +565,10 @@
       $('.detail-view-section').toggleClass('d-none');
     }
 
-    function renderGamePrivateData(data) {
+    function renderGamePrivateData(data, elementClass) {
       var objectid = data['@attributes']['objectid'];
       var gamePrivatedataHTML = '';
+      $(document).find(elementClass).html(gamePrivatedataHTML);
       $.getJSON("./games.json", function (data) {
         $.each(data, function (index, row) {
           if (row["Game ID"] == objectid) {
@@ -553,7 +581,7 @@
           }
         });
         // console.log("gamePrivatedataHTML ", gamePrivatedataHTML);
-        $(document).find('.gamePrivateDataHTML').html(gamePrivatedataHTML);
+        $(document).find(elementClass).html(gamePrivatedataHTML);
       }).fail(function () {
         // console.log("An error has occurred.");
       });

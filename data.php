@@ -1,8 +1,10 @@
 <?php 
-    $user_name = 'Thitsa';
-    if(isset($_REQUEST['username']) && !empty($_REQUEST['username'])){
-        $user_name = $_REQUEST['username'];
+    
+    if(!isset($_REQUEST['username']) || empty($_REQUEST['username'])){
+        echo json_encode(['status' => 404, 'error' => "Username is missing. Please add valid Username to get the data."]); exit;
     }
+    
+    $user_name = $_REQUEST['username'];
     /* Pass Arguments */
 	$url = 'https://api.geekdo.com/xmlapi/collection/'.$user_name;
     $get_user_name = explode('/', $url);
@@ -19,8 +21,9 @@
     }      
     curl_close($crl);
     
+    
     $responsearray = json_decode(json_encode((array)simplexml_load_string($response)),true);
-
+    
     if(isset($responsearray['error'])){
         echo json_encode(['status' => 404, 'error' => $responsearray['error']['message']]); exit;
     }
