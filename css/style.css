@@ -437,18 +437,33 @@ and (orientation : portrait) {
 /* 2023 Style code */
 /* .image_slider .image-outer{ position: relative; padding-bottom: 100%;}
 .image_slider .image-outer img{ object-fit: cover; position: absolute; top:0; left:0;} */
+.image_slider,.related_games{ margin-top:30px;}
 .image_slider .slider_item,
   .related_games .slider_item {
-    padding: 10px;
+    padding: 5px;
   }
 
   .image_slider .image-outer,
   .related_games .image-outer {
     position: relative;
-    padding-bottom: 100%;
     display: flex !important;
+    border:4px solid #fff;
+    box-shadow: 0 0 4px 0 rgba(0,0,0,0.30);
+    max-width:198px;
+    height:198px;
+    margin:5px auto;
   }
-
+  .image_slider .slider_item h6,
+  .related_games .slider_item h6 {
+    margin-left:auto !important;
+    margin-right:auto !important;
+    max-width:198px;
+  }
+  .image_slider .image-outer a,
+  .related_games .image-outer a{
+    width:100%;
+    height:100%;
+  }
   .image_slider .image-outer img,
   .related_games .image-outer img {
     object-fit: cover;
@@ -458,14 +473,98 @@ and (orientation : portrait) {
     width: 100%;
     height: 100%;
   }
+  .image_slider h6{ font-size:18px;}
+  .bg-alto{ background-color: #cbcccc;}
+  .text-primary{ color:#3874b5 !important;}
+  .bg-primary{ background-color:#3874b5 !important;}
+  .page_greek div{ font-family: 'DINCondensed-Bold'; line-height: 1.2;}
   .font-dinblack{ font-family: 'DINBlack';}
   .font-DINCondensed{ font-family: 'DINCondensed-Bold';}
   .font-DINRegular{ font-family: 'DINRegular';}
-  .text-large{font-size:22px;}
-  .sup-small{ font-size:50%; top: -1em;}
-  .ratingStar{
-    display: flex; position: relative;
+  .text-large{font-size:22px; letter-spacing: -0.5px;}
+  .sup-small{ font-size:30%; top: -2em; color:#000; letter-spacing: 0;}
+  .ratingWrapper{width: 182px; position: relative; color: #e7e7e9; z-index:1; margin-left:auto;}
+  .ratingStar { overflow: hidden; white-space: nowrap; }
+  .ratingStar span {
+    font-size: 48px;
+    line-height: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    color: #fcb040;
+    letter-spacing: -4px;
   }
-  .ratingStar img{ max-width: 80px;}
-  .rating_fill{position: absolute; top:0; bottom:0; left:0; width:0; background: #fcb040;}
+  .pagination-pages .line{ height:100%; width:1px; background: #000000; vertical-align: middle;
+    padding-left: 0; margin-left: 5px; margin-right: 5px; }
+  .ratingStar span:before {
+    content: "★★★★★";
+    position: absolute;
+    color: #e7e7e9;
+    z-index: -1;
+  }
+  .page_greek{
+
+  }
+  .game-card{}
+  .game-title{ font-size: 48px; letter-spacing: -1px; margin:0;}
+  .game-designer{ font-size: 28px; letter-spacing: -1px;}
+.metaGroup { display: flex; gap:10px; justify-content: flex-end; align-items: center;}
+.metaGroup span{ display: flex; align-items: center;}
+.img-box{border:4px solid #fff;
+    box-shadow: 0 0 4px 0 rgba(0,0,0,0.30);}
+    .img-box img{ width:100%;}
 .pointer-cursor{ cursor: pointer;}
+.show-list-view{font-size:18px;}
+.game-level{ background-color: #cbcdcc; position: relative;}
+.game-level:before{ content:''; width:date-level; background-color: #000; position:absolute; left:0; top:0; bottom:0;}
+.boardgamemechanic div{ color:#949598;}
+.game-level span{ color:#fff; position: relative ; z-index: 1;}
+.gamePrivateDataHTML{ margin:20px 0; padding:10px; background: #3774b7; color:#fff; font-size:18px; }
+.gamePrivateDataHTML > div{ 
+    padding-bottom:10px; margin-bottom: 10px; border-bottom: 1px solid #fff;
+}
+.gamePrivateDataHTML > div:nth-last-child(){
+    margin-bottom: 0; padding-bottom: 0; border:none;
+}
+.view-details h5{ padding-top:10px;}
+
+@media screen and (max-width:767px){
+    .sup-small {
+        font-size: 30%;
+        top: 0;
+        display: block;
+        line-height: 130%;
+    }
+    .metaGroup{ justify-content: flex-start;}
+    .ratingWrapper{ margin-left: 0;}
+}
+
+.page_greek.AnimateView{ height:100%;}
+.page_greek.AnimateView > .container { margin-bottom: 0 !important; height: 100%; margin-top:0 !important;}
+.page_greek.AnimateView .slideshow-slider{ height:100%;}
+.page_greek.AnimateView .slick-list,
+.page_greek.AnimateView .slick-track,
+.page_greek.AnimateView .slick-slide,
+.page_greek.AnimateView .slick-slide > div,
+.page_greek.AnimateView .slider_item{
+    height:100%;
+}
+.page_greek.AnimateView .slider_item{ padding: 10px;}
+.page_greek.AnimateView .slideshow-slider .image-outer{
+    height:330px; max-height:calc(100vw - 50px); overflow: hidden; position: relative; border:4px solid #fff;
+    box-shadow: 0 0 4px 0 rgba(0,0,0,0.30);
+}
+.page_greek.AnimateView .slideshow-slider .image-outer .games-slider-item{
+    height:100%; width:100%;
+}
+.page_greek.AnimateView .slideshow-slider .image-outer .games-slider-item img{
+    position: absolute; width:100%; height:100%; object-fit: cover;
+}
+.page_greek.AnimateView .slideshow-slider h4{
+    white-space: nowrap; margin-top:2vh; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0;
+}
+.page_greek.AnimateView .slideshow-slider  h6{
+    margin-top:0;
+}
+.page_greek.AnimateView .slideshow-slider  p{
+    font-family: 'DINRegular';
+}
