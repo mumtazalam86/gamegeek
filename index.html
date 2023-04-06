@@ -203,7 +203,7 @@
         var gameRatingAverage = getBoardGameRatingAverage(data);
         var ratingInPercentage = ((gameRatingAverage*100)/5);
 
-        $('.slideshow-slider').append(`<div class="slider_item"><div class="bg-alto py-1 px-2  preview_title">${getBoardGameName(data)}</div><div class="image-outer"><a href="javascript:;" class="games-slider-item" data-objectid="${objectid}"><img src="${data.image}" class="img-fluid" id="sliderImg" data-BoardgamesId="${objectid}"></a></div><h4>${getBoardGameName(data)}</h4><h6>${getBoardGameDesigner(data)}</h6>
+        $('.slideshow-slider').append(`<div class="slider_item"><div class="bg-alto py-1 px-2  preview_title">&nbsp;</div><div class="image-outer"><a href="javascript:;" class="games-slider-item" data-objectid="${objectid}"><img src="${data.image}" class="img-fluid" id="sliderImg" data-BoardgamesId="${objectid}"></a></div><h4>${getBoardGameName(data)}</h4><h6>${getBoardGameDesigner(data)}</h6>
         <div class="text-right" data-objectid="${objectid}"><div class="metaGroup"><span><img src="./images/earshot-games_player.png" width="35px">${data.minplayers}-${data.maxplayers}</span><span><img src="./images/earshot-games_time.png"width="35px">${data.minplaytime}-${data.maxplaytime}</span><span><img src="./images/earshot-games_age.png"  width="35px">${data.age}+</span></div></div> 
         <div class="ratingWrapper"><div class="ratingStar" style="width: ${ratingInPercentage}%"><span>&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</span></div> </div>
         <div class="gamePrivateDataHTML slideshow-game-${objectid}-private-data"></div>
