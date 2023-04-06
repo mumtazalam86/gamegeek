@@ -196,7 +196,7 @@
           if (description.length > 160) {
             textContent = description.substr(0,150) + '...';
           }
-        $('.slideshow-slider').append(`<div class="slider_item"><div class="image-outer"><a href="javascript:;" class="games-slider-item" data-objectid="${objectid}"><img src="${data.image}" class="img-fluid" id="sliderImg" data-BoardgamesId="${objectid}"></a></div><h4>${getBoardGameName(data)}</h4><h6>${getBoardGameDesigner(data)}</h6><p>${textContent}</p></div>`);
+        $('.slideshow-slider').append(`<div class="slider_item">${data.boardgameartist}<div class="image-outer"><a href="javascript:;" class="games-slider-item" data-objectid="${objectid}"><img src="${data.image}" class="img-fluid" id="sliderImg" data-BoardgamesId="${objectid}"></a></div><h4>${getBoardGameName(data)}</h4><h6>${getBoardGameDesigner(data)}</h6><p>${textContent}</p></div>`);
       });
 
       initiateSlideShowSlider();
@@ -526,8 +526,6 @@
                   </div>
                 </div>
               </div>
-          
-             
             </div>
             <div class="related_games">
             <h5>You might also like</h5>  
