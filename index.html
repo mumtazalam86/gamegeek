@@ -568,7 +568,7 @@
     function renderGamePrivateData(data, elementClass) {
       var objectid = data['@attributes']['objectid'];
       var gamePrivatedataHTML = '';
-      $(document).find(elementClass).html(gamePrivatedataHTML);
+      $(document).find(elementClass).html(gamePrivatedataHTML).addClass('d-none');
       $.getJSON("./games.json", function (data) {
         $.each(data, function (index, row) {
           if (row["Game ID"] == objectid) {
@@ -581,7 +581,9 @@
           }
         });
         // console.log("gamePrivatedataHTML ", gamePrivatedataHTML);
-        $(document).find(elementClass).html(gamePrivatedataHTML);
+        if(gamePrivatedataHTML != ''){
+          $(document).find(elementClass).html(gamePrivatedataHTML).removeClass('d-none');
+        }
       }).fail(function () {
         // console.log("An error has occurred.");
       });

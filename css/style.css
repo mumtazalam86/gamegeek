@@ -495,6 +495,7 @@ and (orientation : portrait) {
   }
   .pagination-pages .line{ height:100%; width:1px; background: #000000; vertical-align: middle;
     padding-left: 0; margin-left: 5px; margin-right: 5px; }
+    .pagination-pages .page-number.active{ cursor: default; pointer-events: none;}
   .ratingStar span:before {
     content: "★★★★★";
     position: absolute;
@@ -556,6 +557,10 @@ and (orientation : portrait) {
 .page_greek.AnimateView .slideshow-slider .image-outer .games-slider-item{
     height:100%; width:100%;
 }
+.page_greek.AnimateView .slideshow-slider .metaGroup{
+    justify-content: flex-start;
+}
+.page_greek.AnimateView .slideshow-slider .ratingWrapper{ margin-left: 0;}
 .page_greek.AnimateView .slideshow-slider .image-outer .games-slider-item img{
     position: absolute; width:100%; height:100%; object-fit: cover;
 }
